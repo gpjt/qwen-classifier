@@ -63,16 +63,16 @@ Place three CSV files at the repo root:
 
 Each must have the columns:
 
-- **`Text`** — the raw input string
 - **`Label`** — integer class id (`0` for ham, `1` for spam)
+- **`Text`** — the raw input string
 
 Example (`classification-train.csv`):
 
 ```csv
-Text,Label
-"Hello! Are we still on for lunch?",0
-"CONGRATULATIONS! You've won a FREE cruise. Click now!",1
-"Invoice attached. Thanks.",0
+Label,Text
+0,"Hello! Are we still on for lunch?"
+1,"CONGRATULATIONS! You've won a FREE cruise. Click now!"
+0,"Invoice attached. Thanks."
 ```
 
 **Notes**
