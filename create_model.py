@@ -9,7 +9,7 @@ def create_model():
     model = AutoModelForCausalLM.from_pretrained(
         model_name,
         dtype="auto",
-        device_map="auto"
+        device_map="auto",
     )
     model.lm_head = torch.nn.Linear(
         in_features=model.lm_head.in_features,
