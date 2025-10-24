@@ -8,6 +8,7 @@ dependencies = [
     "accelerate>=1.11.0",
     "ipython>=9.6.0",
     "numpy>=2.3.4",
+    "pandas>=2.3.3",
     "torch>=2.9.0",
     "transformers>=4.57.1",
 ]
