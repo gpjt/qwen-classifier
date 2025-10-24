@@ -1,4 +1,5 @@
 import datetime
+import json
 import time
 from pathlib import Path
 
@@ -171,7 +172,7 @@ def evaluate_model(model, train_loader, val_loader, eval_iter):
 
 
 
-def save_checkpoint(model):
+def save_checkpoint(model, epoch, train_loss, val_loss, is_best_val_loss):
     checkpoints_dir = Path(__file__).resolve().parent / "checkpoints"
     if checkpoints_dir.exists():
         assert checkpoints_dir.is_dir()
@@ -185,7 +186,19 @@ def save_checkpoint(model):
     tensors_file = checkpoint_dir / "model.safetensors"
     save_file(model.state_dict(), tensors_file)
 
-    skdljfsldkfj
+    meta = dict(
+        epoch=epoch,
+        train_loss=train_loss,
+        val_loss=val_loss,
+    )
+    meta_file = checkpoint_dir / "meta.json"
+    meta_file.write_text(json.dumps(meta))
+
+    symlink_target = Path(".") / checkpoint_dir.name
+    if is_best_val_loss:
+        best_path = checkpoints_dir / "best"
+        best_path.unlink(missing_ok=True)
+        best_path.symlink_to(symlink_target, target_is_directory=True)
 
 
 def train_classifier_simple(
@@ -199,6 +212,8 @@ def train_classifier_simple(
 
     examples_seen = 0
     global_step = -1
+
+    best_val_loss = None
 
     for epoch in range(num_epochs):
         model.train()
@@ -223,7 +238,12 @@ def train_classifier_simple(
                     f"Train loss {train_loss:.3f} "
                     f"Val loss {val_loss:.3f}"
                 )
-                save_checkpoint(model)
+                if best_val_loss is None or val_loss < best_val_loss:
+                    best_val_loss = val_loss
+                    is_best_val_loss = True
+                else:
+                    is_best_val_loss = False
+                save_checkpoint(model, epoch, train_loss, val_loss, is_best_val_loss)
 
         train_accuracy = calc_accuracy_loader(
             train_loader, model, num_batches=eval_iter
