@@ -79,7 +79,7 @@ Label,Text
 - By default, the training set’s **longest tokenized sample length** becomes the fixed sequence length. Validation and test are padded/truncated to that length for consistency.
 - Padding uses the tokenizer’s pad token id (`50256` in the current code).
 
-```
+---
 
 ## Checkpoints & layout
 
