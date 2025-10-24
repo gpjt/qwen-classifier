@@ -3,7 +3,7 @@
 A tiny repo that “decapitates” a causal LM (Qwen3-0.6B-Base) and fine-tunes a new 2-way classification head for **spam vs ham**.
 It trains on three CSV files, writes versioned checkpoints, and includes a simple CLI for inference.
 
-```
+---
 
 ## Quick start
 
