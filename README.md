@@ -10,31 +10,27 @@ It trains on three CSV files, writes versioned checkpoints, and includes a simpl
 This project uses **uv** for dependency management and execution.
 
 1) **Install deps**
-   ```
-   bash
+   ```bash
    uv sync
    ```
 
 2) **Train**
-   ```
-   bash
+   ```bash
    uv run python train_qwen_classifier.py
    ```
 
 3) **Classify some text (uses the `best` checkpoint symlink)**
-   ```
-   bash
+   ```bash
    uv run python run_qwen_classifier.py "free $$$ click here NOW"
    # -> Ham: 03.12% || Spam: 96.88%
    ```
 
 You can also point at a specific checkpoint directory name:
-```
-bash
+```bash
 uv run python run_qwen_classifier.py "hello there, just checking in" 20251024Z223015
 ```
 
-```
+---
 
 ## What’s in here?
 
@@ -55,7 +51,7 @@ uv run python run_qwen_classifier.py "hello there, just checking in" 20251024Z22
 
 - `run_qwen_classifier.py` — Tiny CLI using `click`; prints **Ham** and **Spam** probabilities for an input string using a chosen checkpoint (default: `best`).
 
-```
+---
 
 ## Data format
 
@@ -67,31 +63,29 @@ Place three CSV files at the repo root:
 
 Each must have the columns:
 
-- **`Text`** — the raw input string
 - **`Label`** — integer class id (`0` for ham, `1` for spam)
+- **`Text`** — the raw input string
 
 Example (`classification-train.csv`):
 
-```
-csv
-Text,Label
-"Hello! Are we still on for lunch?",0
-"CONGRATULATIONS! You've won a FREE cruise. Click now!",1
-"Invoice attached. Thanks.",0
+```csv
+Label,Text
+0,"Hello! Are we still on for lunch?"
+1,"CONGRATULATIONS! You've won a FREE cruise. Click now!"
+0,"Invoice attached. Thanks."
 ```
 
 **Notes**
 - By default, the training set’s **longest tokenized sample length** becomes the fixed sequence length. Validation and test are padded/truncated to that length for consistency.
-- Padding uses the tokenizer’s pad token id (`50256` in the current code).
+- Padding uses the tokenizer’s pad token id
 
-```
+---
 
 ## Checkpoints & layout
 
 After/while training you’ll have:
 
-```
-text
+```text
 checkpoints/
   20251024Z223015/
     model.safetensors
@@ -104,7 +98,7 @@ checkpoints/
 
 Use the directory name (or `best`) with the CLI.
 
-```
+---
 
 ## Requirements
 
@@ -119,20 +113,18 @@ Managed by `uv`. Typical runtime stack:
 
 Install via:
 
-```
-bash
+```bash
 uv sync
 ```
 
 All commands should be run with `uv run`, e.g.:
 
-```
-bash
+```bash
 uv run python train_qwen_classifier.py
 uv run python run_qwen_classifier.py "some text"
 ```
 
-```
+---
 
 ## How it works (short version)
 
@@ -140,7 +132,7 @@ uv run python run_qwen_classifier.py "some text"
 2. **Labeling scheme** — For each input, forward once and read **the last token’s logits**. Apply softmax to get class probabilities.
 3. **Training loop** — Simple supervised fine-tuning on cross-entropy of those logits versus integer labels. Mini evals every 50 steps; best-val symlink updated on improvement.
 
-```
+---
 
 ## Tips & troubleshooting
 
@@ -149,7 +141,7 @@ uv run python run_qwen_classifier.py "some text"
 - **Sequence length**: Very long inputs will be truncated to the training max length; very short inputs are padded. If desired, set a hard `max_length` in `SpamDataset`.
 - **Reproducibility**: The script seeds a few things (`torch.manual_seed(123)`), but complete determinism is not guaranteed across hardware/backends.
 
-```
+---
 
 ## License
 
