@@ -139,7 +139,6 @@ uv run python run_qwen_classifier.py "some text"
 - **GPU vs CPU**: `device_map="auto"` will try GPU if available. If you only have CPU and see CUDA errors, ensure your PyTorch install matches your platform or set CUDA-related env vars off.
 - **Model downloads**: Hugging Face will download `Qwen/Qwen3-0.6B-Base` on first run; ensure you have internet or have it cached.
 - **Sequence length**: Very long inputs will be truncated to the training max length; very short inputs are padded. If desired, set a hard `max_length` in `SpamDataset`.
-- **Reproducibility**: The script seeds a few things (`torch.manual_seed(123)`), but complete determinism is not guaranteed across hardware/backends.
 
 ---
 

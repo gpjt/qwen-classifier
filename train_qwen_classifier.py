@@ -79,7 +79,6 @@ def load_datasets(tokenizer):
 
     num_workers = 0
     batch_size = 8
-    torch.manual_seed(123)
 
     train_loader = DataLoader(
         dataset=train_dataset,
@@ -252,7 +251,6 @@ def train(model, train_loader, val_loader, test_loader):
     print(f"Test loss: {test_loss:.3f}")
 
     start_time = time.time()
-    torch.manual_seed(123)
     optimizer = torch.optim.AdamW(model.parameters(), lr=5e-5, weight_decay=0.1)
     num_epochs = 5
 
