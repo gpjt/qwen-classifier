@@ -8,7 +8,8 @@ import torch
 from safetensors.torch import save_file
 
 from torch.utils.data import DataLoader, Dataset
-from transformers import AutoModelForCausalLM, AutoTokenizer
+
+from create_model import create_model
 
 
 class SpamDataset(Dataset):
@@ -300,19 +301,7 @@ def train(model, train_loader, val_loader, test_loader):
 
 
 def main():
-    model_name = "Qwen/Qwen3-0.6B-Base"
-    tokenizer = AutoTokenizer.from_pretrained(model_name)
-    model = AutoModelForCausalLM.from_pretrained(
-        model_name,
-        dtype="auto",
-        device_map="auto"
-    )
-    model.lm_head = torch.nn.Linear(
-        in_features=model.lm_head.in_features,
-        out_features=2,
-        device=model.lm_head.weight.device,
-        dtype=model.lm_head.weight.dtype,
-    )
+    model, tokenizer = create_model()
 
     train_loader, val_loader, test_loader = load_datasets(tokenizer)
     train(model, train_loader, val_loader, test_loader)
