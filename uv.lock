@@ -697,6 +697,7 @@ dependencies = [
     { name = "ipython" },
     { name = "numpy" },
     { name = "pandas" },
+    { name = "safetensors" },
     { name = "torch" },
     { name = "transformers" },
 ]
@@ -707,6 +708,7 @@ requires-dist = [
     { name = "ipython", specifier = ">=9.6.0" },
     { name = "numpy", specifier = ">=2.3.4" },
     { name = "pandas", specifier = ">=2.3.3" },
+    { name = "safetensors", specifier = ">=0.6.2" },
     { name = "torch", specifier = ">=2.9.0" },
     { name = "transformers", specifier = ">=4.57.1" },
 ]
