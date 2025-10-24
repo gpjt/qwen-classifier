@@ -1,15 +1,12 @@
-import datetime
-import json
 import time
-from pathlib import Path
 
 import pandas as pd
 import torch
-from safetensors.torch import save_file
 
 from torch.utils.data import DataLoader, Dataset
 
 from create_model import create_model
+from persistence import save_checkpoint
 
 
 class SpamDataset(Dataset):
@@ -170,36 +167,6 @@ def evaluate_model(model, train_loader, val_loader, eval_iter):
 
     model.train()
     return train_loss, val_loss
-
-
-
-def save_checkpoint(model, epoch, train_loss, val_loss, is_best_val_loss):
-    checkpoints_dir = Path(__file__).resolve().parent / "checkpoints"
-    if checkpoints_dir.exists():
-        assert checkpoints_dir.is_dir()
-    else:
-        checkpoints_dir.mkdir()
-
-    now = datetime.datetime.now(datetime.UTC)
-    checkpoint_dir = checkpoints_dir / f"{now:%Y%m%dZ%H%M%S}"
-    checkpoint_dir.mkdir()
-
-    tensors_file = checkpoint_dir / "model.safetensors"
-    save_file(model.state_dict(), tensors_file)
-
-    meta = dict(
-        epoch=epoch,
-        train_loss=train_loss,
-        val_loss=val_loss,
-    )
-    meta_file = checkpoint_dir / "meta.json"
-    meta_file.write_text(json.dumps(meta))
-
-    symlink_target = Path(".") / checkpoint_dir.name
-    if is_best_val_loss:
-        best_path = checkpoints_dir / "best"
-        best_path.unlink(missing_ok=True)
-        best_path.symlink_to(symlink_target, target_is_directory=True)
 
 
 def train_classifier_simple(
