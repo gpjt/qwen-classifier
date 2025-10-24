@@ -12,7 +12,7 @@ from persistence import save_checkpoint
 class SpamDataset(Dataset):
 
     def __init__(
-        self, csv_file, tokenizer, max_length=None, pad_token_id=50256
+        self, csv_file, tokenizer, max_length=None
     ):
         self.data = pd.read_csv(csv_file)
 
@@ -31,7 +31,7 @@ class SpamDataset(Dataset):
             ]
 
         self.encoded_texts = [
-            encoded_text + [pad_token_id] * (self.max_length - len(encoded_text))
+            encoded_text + [tokenizer.pad_token_id] * (self.max_length - len(encoded_text))
             for encoded_text in self.encoded_texts
         ]
 
